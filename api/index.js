@@ -8,8 +8,9 @@ const path = require('path');
 
 const app = express();
 const port = 3011; // 기존 3010과 충돌 방지
-const prisma = new PrismaClient();
-const storage = require('./storage'); // JSON 로컬 저장소 추가
+const storage = require('./storage');
+const prisma = storage.mysql; // 기존 MySQL 클라이언트
+const neon = storage.neon;     // 새로 추가된 Neon 클라이언트
 
 // 정적 파일 제공 (혹시 필요할 경우를 대비)
 app.use(express.static(path.join(__dirname, '..', 'public')));
@@ -75,7 +76,7 @@ app.get('/api/summary', async (req, res) => {
         console.log(`[API] DB 조회 결과 수: ${result.length}개`);
 
         // [핵심] 등록된 용차 기사 목록 로드 (최팀장님 요청: 등록된 기사만 정산 대상으로)
-        const registeredDrivers = storage.getDrivers();
+        const registeredDrivers = await storage.getDrivers();
         const registeredNames = new Set(registeredDrivers.map(d => (d.name || '').replace(/\s/g, '').trim()));
 
         // BigInt 처리 + 한글 인코딩 변환 + 이름 조합
@@ -163,7 +164,7 @@ app.get('/api/summary', async (req, res) => {
             }
         });
 
-        const history = storage.getHistory();
+        const history = await storage.getHistory();
         const settledKeys = new Set(history.map(h => `${h.date}_${(h.name || h.driverName || '').replace(/\s/g, '').trim()}`));
 
         const finalResult = Array.from(consolidatedMap.values())
@@ -308,24 +309,24 @@ app.get('/api/customers', async (req, res) => {
 // ------------------------------------------------------------------
 // API: 비용 단가 마스터 (JSON Storage)
 // ------------------------------------------------------------------
-app.get('/api/fees', (req, res) => {
-    res.json({ data: storage.getFees() });
+app.get('/api/fees', async (req, res) => {
+    res.json({ data: await storage.getFees() });
 });
 
-app.post('/api/fees/archive', (req, res) => {
+app.post('/api/fees/archive', async (req, res) => {
     const { idx } = req.body;
     if (!idx) return res.status(400).json({ success: false, message: "ID가 필요합니다." });
-    const success = storage.archiveFee(idx);
-    res.json({ success, message: success ? "이력으로 전환되었습니다." : "전환 실패" });
+    const success = await storage.saveFee({ idx, isActive: false }); // archive는 isActive=false로 처리
+    res.json({ success: !!success, message: success ? "이력으로 전환되었습니다." : "전환 실패" });
 });
 
-app.post('/api/fees', (req, res) => {
-    const success = storage.saveFee(req.body);
-    res.json({ success, message: success ? "저장되었습니다." : "저장 실패" });
+app.post('/api/fees', async (req, res) => {
+    const success = await storage.saveFee(req.body);
+    res.json({ success: !!success, message: success ? "저장되었습니다." : "저장 실패" });
 });
 
-app.delete('/api/fees', (req, res) => {
-    const success = storage.deleteFee(req.query.idx);
+app.delete('/api/fees', async (req, res) => {
+    const success = await storage.deleteFee(req.query.idx);
     res.json({ success, message: success ? "삭제되었습니다." : "삭제 실패" });
 });
 
@@ -350,9 +351,9 @@ app.get('/api/ping', (req, res) => res.json({ status: 'ok', time: new Date() }))
 // ------------------------------------------------------------------
 // API: 정산 결과 저장 및 히스토리 조회
 // ------------------------------------------------------------------
-app.get('/api/settlement-history', (req, res) => {
+app.get('/api/settlement-history', async (req, res) => {
     const { startDate, endDate, name } = req.query;
-    let list = storage.getHistory();
+    let list = await storage.getHistory();
 
     // 백엔드 필터링 적용
     if (startDate || endDate || name) {
@@ -378,47 +379,47 @@ app.get('/api/settlement-history', (req, res) => {
     res.json({ data: list });
 });
 
-app.post('/api/save-settlement', (req, res) => {
-    const success = storage.saveHistory(req.body);
-    res.json({ success, message: success ? "정산 기록이 전송되었습니다." : "전송 실패" });
+app.post('/api/save-settlement', async (req, res) => {
+    const success = await storage.saveHistory(req.body);
+    res.json({ success: !!success, message: success ? "정산 기록이 전송되었습니다." : "전송 실패" });
 });
 
-app.delete('/api/settlement-history', (req, res) => {
-    const success = storage.deleteHistory(req.query.idx);
+app.delete('/api/settlement-history', async (req, res) => {
+    const success = await storage.deleteHistory(req.query.idx);
     res.json({ success, message: success ? "삭제되었습니다." : "삭제 실패" });
 });
 
 // ------------------------------------------------------------------
 // API: 용차 기사 마스터
 // ------------------------------------------------------------------
-app.get('/api/drivers', (req, res) => {
-    res.json({ data: storage.getDrivers() });
+app.get('/api/drivers', async (req, res) => {
+    res.json({ data: await storage.getDrivers() });
 });
 
-app.post('/api/drivers', (req, res) => {
-    const success = storage.saveDriver(req.body);
-    res.json({ success, message: success ? "저장되었습니다." : "저장 실패" });
+app.post('/api/drivers', async (req, res) => {
+    const success = await storage.saveDriver(req.body);
+    res.json({ success: !!success, message: success ? "저장되었습니다." : "저장 실패" });
 });
 
-app.delete('/api/drivers', (req, res) => {
-    const success = storage.deleteDriver(req.query.idx);
+app.delete('/api/drivers', async (req, res) => {
+    const success = await storage.deleteDriver(req.query.idx);
     res.json({ success, message: success ? "삭제되었습니다." : "삭제 실패" });
 });
 
 // ------------------------------------------------------------------
 // API: 소속 마스터
 // ------------------------------------------------------------------
-app.get('/api/affiliations', (req, res) => {
-    res.json({ data: storage.getAffiliations() });
+app.get('/api/affiliations', async (req, res) => {
+    res.json({ data: await storage.getAffiliations() });
 });
 
-app.post('/api/affiliations', (req, res) => {
-    const success = storage.saveAffiliation(req.body);
-    res.json({ success, message: success ? "저장되었습니다." : "저장 실패" });
+app.post('/api/affiliations', async (req, res) => {
+    const success = await storage.saveAffiliation(req.body);
+    res.json({ success: !!success, message: success ? "저장되었습니다." : "저장 실패" });
 });
 
-app.delete('/api/affiliations', (req, res) => {
-    const success = storage.deleteAffiliation(req.query.idx);
+app.delete('/api/affiliations', async (req, res) => {
+    const success = await storage.deleteAffiliation(req.query.idx);
     res.json({ success, message: success ? "삭제되었습니다." : "삭제 실패" });
 });
 
