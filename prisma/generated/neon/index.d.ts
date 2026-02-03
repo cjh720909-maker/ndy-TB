@@ -1125,27 +1125,36 @@ export namespace Prisma {
     id: number | null
     name: string | null
     affiliation: string | null
-    carNo: string | null
     tonnage: string | null
+    regDate: string | null
+    address: string | null
+    memo: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DriverMaxAggregateOutputType = {
     id: number | null
     name: string | null
     affiliation: string | null
-    carNo: string | null
     tonnage: string | null
+    regDate: string | null
+    address: string | null
+    memo: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DriverCountAggregateOutputType = {
     id: number
     name: number
     affiliation: number
-    carNo: number
     tonnage: number
+    regDate: number
+    address: number
+    memo: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -1162,27 +1171,36 @@ export namespace Prisma {
     id?: true
     name?: true
     affiliation?: true
-    carNo?: true
     tonnage?: true
+    regDate?: true
+    address?: true
+    memo?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type DriverMaxAggregateInputType = {
     id?: true
     name?: true
     affiliation?: true
-    carNo?: true
     tonnage?: true
+    regDate?: true
+    address?: true
+    memo?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type DriverCountAggregateInputType = {
     id?: true
     name?: true
     affiliation?: true
-    carNo?: true
     tonnage?: true
+    regDate?: true
+    address?: true
+    memo?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -1276,9 +1294,12 @@ export namespace Prisma {
     id: number
     name: string
     affiliation: string | null
-    carNo: string | null
     tonnage: string | null
+    regDate: string | null
+    address: string | null
+    memo: string | null
     createdAt: Date
+    updatedAt: Date
     _count: DriverCountAggregateOutputType | null
     _avg: DriverAvgAggregateOutputType | null
     _sum: DriverSumAggregateOutputType | null
@@ -1304,27 +1325,36 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     affiliation?: boolean
-    carNo?: boolean
     tonnage?: boolean
+    regDate?: boolean
+    address?: boolean
+    memo?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["driver"]>
 
   export type DriverSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     affiliation?: boolean
-    carNo?: boolean
     tonnage?: boolean
+    regDate?: boolean
+    address?: boolean
+    memo?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["driver"]>
 
   export type DriverSelectScalar = {
     id?: boolean
     name?: boolean
     affiliation?: boolean
-    carNo?: boolean
     tonnage?: boolean
+    regDate?: boolean
+    address?: boolean
+    memo?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
 
@@ -1335,9 +1365,12 @@ export namespace Prisma {
       id: number
       name: string
       affiliation: string | null
-      carNo: string | null
       tonnage: string | null
+      regDate: string | null
+      address: string | null
+      memo: string | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["driver"]>
     composites: {}
   }
@@ -1734,9 +1767,12 @@ export namespace Prisma {
     readonly id: FieldRef<"Driver", 'Int'>
     readonly name: FieldRef<"Driver", 'String'>
     readonly affiliation: FieldRef<"Driver", 'String'>
-    readonly carNo: FieldRef<"Driver", 'String'>
     readonly tonnage: FieldRef<"Driver", 'String'>
+    readonly regDate: FieldRef<"Driver", 'String'>
+    readonly address: FieldRef<"Driver", 'String'>
+    readonly memo: FieldRef<"Driver", 'String'>
     readonly createdAt: FieldRef<"Driver", 'DateTime'>
+    readonly updatedAt: FieldRef<"Driver", 'DateTime'>
   }
     
 
@@ -2039,11 +2075,13 @@ export namespace Prisma {
 
   export type FeeMasterAvgAggregateOutputType = {
     id: number | null
+    year: number | null
     fee: number | null
   }
 
   export type FeeMasterSumAggregateOutputType = {
     id: number | null
+    year: number | null
     fee: number | null
   }
 
@@ -2051,38 +2089,55 @@ export namespace Prisma {
     id: number | null
     affiliation: string | null
     tonnage: string | null
+    year: number | null
+    region: string | null
     fee: number | null
+    memo: string | null
     isActive: boolean | null
+    readonly: boolean | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type FeeMasterMaxAggregateOutputType = {
     id: number | null
     affiliation: string | null
     tonnage: string | null
+    year: number | null
+    region: string | null
     fee: number | null
+    memo: string | null
     isActive: boolean | null
+    readonly: boolean | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type FeeMasterCountAggregateOutputType = {
     id: number
     affiliation: number
     tonnage: number
+    year: number
+    region: number
     fee: number
+    memo: number
     isActive: number
+    readonly: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
 
   export type FeeMasterAvgAggregateInputType = {
     id?: true
+    year?: true
     fee?: true
   }
 
   export type FeeMasterSumAggregateInputType = {
     id?: true
+    year?: true
     fee?: true
   }
 
@@ -2090,27 +2145,42 @@ export namespace Prisma {
     id?: true
     affiliation?: true
     tonnage?: true
+    year?: true
+    region?: true
     fee?: true
+    memo?: true
     isActive?: true
+    readonly?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type FeeMasterMaxAggregateInputType = {
     id?: true
     affiliation?: true
     tonnage?: true
+    year?: true
+    region?: true
     fee?: true
+    memo?: true
     isActive?: true
+    readonly?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type FeeMasterCountAggregateInputType = {
     id?: true
     affiliation?: true
     tonnage?: true
+    year?: true
+    region?: true
     fee?: true
+    memo?: true
     isActive?: true
+    readonly?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -2204,9 +2274,14 @@ export namespace Prisma {
     id: number
     affiliation: string
     tonnage: string
+    year: number
+    region: string
     fee: number
+    memo: string | null
     isActive: boolean
+    readonly: boolean
     createdAt: Date
+    updatedAt: Date
     _count: FeeMasterCountAggregateOutputType | null
     _avg: FeeMasterAvgAggregateOutputType | null
     _sum: FeeMasterSumAggregateOutputType | null
@@ -2232,27 +2307,42 @@ export namespace Prisma {
     id?: boolean
     affiliation?: boolean
     tonnage?: boolean
+    year?: boolean
+    region?: boolean
     fee?: boolean
+    memo?: boolean
     isActive?: boolean
+    readonly?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["feeMaster"]>
 
   export type FeeMasterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     affiliation?: boolean
     tonnage?: boolean
+    year?: boolean
+    region?: boolean
     fee?: boolean
+    memo?: boolean
     isActive?: boolean
+    readonly?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["feeMaster"]>
 
   export type FeeMasterSelectScalar = {
     id?: boolean
     affiliation?: boolean
     tonnage?: boolean
+    year?: boolean
+    region?: boolean
     fee?: boolean
+    memo?: boolean
     isActive?: boolean
+    readonly?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
 
@@ -2263,9 +2353,14 @@ export namespace Prisma {
       id: number
       affiliation: string
       tonnage: string
+      year: number
+      region: string
       fee: number
+      memo: string | null
       isActive: boolean
+      readonly: boolean
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["feeMaster"]>
     composites: {}
   }
@@ -2662,9 +2757,14 @@ export namespace Prisma {
     readonly id: FieldRef<"FeeMaster", 'Int'>
     readonly affiliation: FieldRef<"FeeMaster", 'String'>
     readonly tonnage: FieldRef<"FeeMaster", 'String'>
+    readonly year: FieldRef<"FeeMaster", 'Int'>
+    readonly region: FieldRef<"FeeMaster", 'String'>
     readonly fee: FieldRef<"FeeMaster", 'Int'>
+    readonly memo: FieldRef<"FeeMaster", 'String'>
     readonly isActive: FieldRef<"FeeMaster", 'Boolean'>
+    readonly readonly: FieldRef<"FeeMaster", 'Boolean'>
     readonly createdAt: FieldRef<"FeeMaster", 'DateTime'>
+    readonly updatedAt: FieldRef<"FeeMaster", 'DateTime'>
   }
     
 
@@ -2970,6 +3070,7 @@ export namespace Prisma {
     destCount: number | null
     totalWeight: number | null
     fee: number | null
+    ton: number | null
   }
 
   export type SettlementHistorySumAggregateOutputType = {
@@ -2977,6 +3078,7 @@ export namespace Prisma {
     destCount: number | null
     totalWeight: number | null
     fee: number | null
+    ton: number | null
   }
 
   export type SettlementHistoryMinAggregateOutputType = {
@@ -2989,6 +3091,11 @@ export namespace Prisma {
     totalWeight: number | null
     fee: number | null
     memo: string | null
+    isPbox: boolean | null
+    isReturn: boolean | null
+    so: string | null
+    nap: string | null
+    ton: number | null
     createdAt: Date | null
   }
 
@@ -3002,6 +3109,11 @@ export namespace Prisma {
     totalWeight: number | null
     fee: number | null
     memo: string | null
+    isPbox: boolean | null
+    isReturn: boolean | null
+    so: string | null
+    nap: string | null
+    ton: number | null
     createdAt: Date | null
   }
 
@@ -3015,6 +3127,11 @@ export namespace Prisma {
     totalWeight: number
     fee: number
     memo: number
+    isPbox: number
+    isReturn: number
+    so: number
+    nap: number
+    ton: number
     createdAt: number
     _all: number
   }
@@ -3025,6 +3142,7 @@ export namespace Prisma {
     destCount?: true
     totalWeight?: true
     fee?: true
+    ton?: true
   }
 
   export type SettlementHistorySumAggregateInputType = {
@@ -3032,6 +3150,7 @@ export namespace Prisma {
     destCount?: true
     totalWeight?: true
     fee?: true
+    ton?: true
   }
 
   export type SettlementHistoryMinAggregateInputType = {
@@ -3044,6 +3163,11 @@ export namespace Prisma {
     totalWeight?: true
     fee?: true
     memo?: true
+    isPbox?: true
+    isReturn?: true
+    so?: true
+    nap?: true
+    ton?: true
     createdAt?: true
   }
 
@@ -3057,6 +3181,11 @@ export namespace Prisma {
     totalWeight?: true
     fee?: true
     memo?: true
+    isPbox?: true
+    isReturn?: true
+    so?: true
+    nap?: true
+    ton?: true
     createdAt?: true
   }
 
@@ -3070,6 +3199,11 @@ export namespace Prisma {
     totalWeight?: true
     fee?: true
     memo?: true
+    isPbox?: true
+    isReturn?: true
+    so?: true
+    nap?: true
+    ton?: true
     createdAt?: true
     _all?: true
   }
@@ -3170,6 +3304,11 @@ export namespace Prisma {
     totalWeight: number
     fee: number
     memo: string | null
+    isPbox: boolean
+    isReturn: boolean
+    so: string | null
+    nap: string | null
+    ton: number | null
     createdAt: Date
     _count: SettlementHistoryCountAggregateOutputType | null
     _avg: SettlementHistoryAvgAggregateOutputType | null
@@ -3202,6 +3341,11 @@ export namespace Prisma {
     totalWeight?: boolean
     fee?: boolean
     memo?: boolean
+    isPbox?: boolean
+    isReturn?: boolean
+    so?: boolean
+    nap?: boolean
+    ton?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["settlementHistory"]>
 
@@ -3215,6 +3359,11 @@ export namespace Prisma {
     totalWeight?: boolean
     fee?: boolean
     memo?: boolean
+    isPbox?: boolean
+    isReturn?: boolean
+    so?: boolean
+    nap?: boolean
+    ton?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["settlementHistory"]>
 
@@ -3228,6 +3377,11 @@ export namespace Prisma {
     totalWeight?: boolean
     fee?: boolean
     memo?: boolean
+    isPbox?: boolean
+    isReturn?: boolean
+    so?: boolean
+    nap?: boolean
+    ton?: boolean
     createdAt?: boolean
   }
 
@@ -3245,6 +3399,11 @@ export namespace Prisma {
       totalWeight: number
       fee: number
       memo: string | null
+      isPbox: boolean
+      isReturn: boolean
+      so: string | null
+      nap: string | null
+      ton: number | null
       createdAt: Date
     }, ExtArgs["result"]["settlementHistory"]>
     composites: {}
@@ -3648,6 +3807,11 @@ export namespace Prisma {
     readonly totalWeight: FieldRef<"SettlementHistory", 'Int'>
     readonly fee: FieldRef<"SettlementHistory", 'Int'>
     readonly memo: FieldRef<"SettlementHistory", 'String'>
+    readonly isPbox: FieldRef<"SettlementHistory", 'Boolean'>
+    readonly isReturn: FieldRef<"SettlementHistory", 'Boolean'>
+    readonly so: FieldRef<"SettlementHistory", 'String'>
+    readonly nap: FieldRef<"SettlementHistory", 'String'>
+    readonly ton: FieldRef<"SettlementHistory", 'Int'>
     readonly createdAt: FieldRef<"SettlementHistory", 'DateTime'>
   }
     
@@ -4843,9 +5007,12 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     affiliation: 'affiliation',
-    carNo: 'carNo',
     tonnage: 'tonnage',
-    createdAt: 'createdAt'
+    regDate: 'regDate',
+    address: 'address',
+    memo: 'memo',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type DriverScalarFieldEnum = (typeof DriverScalarFieldEnum)[keyof typeof DriverScalarFieldEnum]
@@ -4855,9 +5022,14 @@ export namespace Prisma {
     id: 'id',
     affiliation: 'affiliation',
     tonnage: 'tonnage',
+    year: 'year',
+    region: 'region',
     fee: 'fee',
+    memo: 'memo',
     isActive: 'isActive',
-    createdAt: 'createdAt'
+    readonly: 'readonly',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type FeeMasterScalarFieldEnum = (typeof FeeMasterScalarFieldEnum)[keyof typeof FeeMasterScalarFieldEnum]
@@ -4873,6 +5045,11 @@ export namespace Prisma {
     totalWeight: 'totalWeight',
     fee: 'fee',
     memo: 'memo',
+    isPbox: 'isPbox',
+    isReturn: 'isReturn',
+    so: 'so',
+    nap: 'nap',
+    ton: 'ton',
     createdAt: 'createdAt'
   };
 
@@ -4990,18 +5167,24 @@ export namespace Prisma {
     id?: IntFilter<"Driver"> | number
     name?: StringFilter<"Driver"> | string
     affiliation?: StringNullableFilter<"Driver"> | string | null
-    carNo?: StringNullableFilter<"Driver"> | string | null
     tonnage?: StringNullableFilter<"Driver"> | string | null
+    regDate?: StringNullableFilter<"Driver"> | string | null
+    address?: StringNullableFilter<"Driver"> | string | null
+    memo?: StringNullableFilter<"Driver"> | string | null
     createdAt?: DateTimeFilter<"Driver"> | Date | string
+    updatedAt?: DateTimeFilter<"Driver"> | Date | string
   }
 
   export type DriverOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     affiliation?: SortOrderInput | SortOrder
-    carNo?: SortOrderInput | SortOrder
     tonnage?: SortOrderInput | SortOrder
+    regDate?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    memo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DriverWhereUniqueInput = Prisma.AtLeast<{
@@ -5011,18 +5194,24 @@ export namespace Prisma {
     NOT?: DriverWhereInput | DriverWhereInput[]
     name?: StringFilter<"Driver"> | string
     affiliation?: StringNullableFilter<"Driver"> | string | null
-    carNo?: StringNullableFilter<"Driver"> | string | null
     tonnage?: StringNullableFilter<"Driver"> | string | null
+    regDate?: StringNullableFilter<"Driver"> | string | null
+    address?: StringNullableFilter<"Driver"> | string | null
+    memo?: StringNullableFilter<"Driver"> | string | null
     createdAt?: DateTimeFilter<"Driver"> | Date | string
+    updatedAt?: DateTimeFilter<"Driver"> | Date | string
   }, "id">
 
   export type DriverOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     affiliation?: SortOrderInput | SortOrder
-    carNo?: SortOrderInput | SortOrder
     tonnage?: SortOrderInput | SortOrder
+    regDate?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    memo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: DriverCountOrderByAggregateInput
     _avg?: DriverAvgOrderByAggregateInput
     _max?: DriverMaxOrderByAggregateInput
@@ -5037,9 +5226,12 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Driver"> | number
     name?: StringWithAggregatesFilter<"Driver"> | string
     affiliation?: StringNullableWithAggregatesFilter<"Driver"> | string | null
-    carNo?: StringNullableWithAggregatesFilter<"Driver"> | string | null
     tonnage?: StringNullableWithAggregatesFilter<"Driver"> | string | null
+    regDate?: StringNullableWithAggregatesFilter<"Driver"> | string | null
+    address?: StringNullableWithAggregatesFilter<"Driver"> | string | null
+    memo?: StringNullableWithAggregatesFilter<"Driver"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Driver"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Driver"> | Date | string
   }
 
   export type FeeMasterWhereInput = {
@@ -5049,18 +5241,28 @@ export namespace Prisma {
     id?: IntFilter<"FeeMaster"> | number
     affiliation?: StringFilter<"FeeMaster"> | string
     tonnage?: StringFilter<"FeeMaster"> | string
+    year?: IntFilter<"FeeMaster"> | number
+    region?: StringFilter<"FeeMaster"> | string
     fee?: IntFilter<"FeeMaster"> | number
+    memo?: StringNullableFilter<"FeeMaster"> | string | null
     isActive?: BoolFilter<"FeeMaster"> | boolean
+    readonly?: BoolFilter<"FeeMaster"> | boolean
     createdAt?: DateTimeFilter<"FeeMaster"> | Date | string
+    updatedAt?: DateTimeFilter<"FeeMaster"> | Date | string
   }
 
   export type FeeMasterOrderByWithRelationInput = {
     id?: SortOrder
     affiliation?: SortOrder
     tonnage?: SortOrder
+    year?: SortOrder
+    region?: SortOrder
     fee?: SortOrder
+    memo?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    readonly?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type FeeMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -5070,18 +5272,28 @@ export namespace Prisma {
     NOT?: FeeMasterWhereInput | FeeMasterWhereInput[]
     affiliation?: StringFilter<"FeeMaster"> | string
     tonnage?: StringFilter<"FeeMaster"> | string
+    year?: IntFilter<"FeeMaster"> | number
+    region?: StringFilter<"FeeMaster"> | string
     fee?: IntFilter<"FeeMaster"> | number
+    memo?: StringNullableFilter<"FeeMaster"> | string | null
     isActive?: BoolFilter<"FeeMaster"> | boolean
+    readonly?: BoolFilter<"FeeMaster"> | boolean
     createdAt?: DateTimeFilter<"FeeMaster"> | Date | string
+    updatedAt?: DateTimeFilter<"FeeMaster"> | Date | string
   }, "id">
 
   export type FeeMasterOrderByWithAggregationInput = {
     id?: SortOrder
     affiliation?: SortOrder
     tonnage?: SortOrder
+    year?: SortOrder
+    region?: SortOrder
     fee?: SortOrder
+    memo?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    readonly?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: FeeMasterCountOrderByAggregateInput
     _avg?: FeeMasterAvgOrderByAggregateInput
     _max?: FeeMasterMaxOrderByAggregateInput
@@ -5096,9 +5308,14 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"FeeMaster"> | number
     affiliation?: StringWithAggregatesFilter<"FeeMaster"> | string
     tonnage?: StringWithAggregatesFilter<"FeeMaster"> | string
+    year?: IntWithAggregatesFilter<"FeeMaster"> | number
+    region?: StringWithAggregatesFilter<"FeeMaster"> | string
     fee?: IntWithAggregatesFilter<"FeeMaster"> | number
+    memo?: StringNullableWithAggregatesFilter<"FeeMaster"> | string | null
     isActive?: BoolWithAggregatesFilter<"FeeMaster"> | boolean
+    readonly?: BoolWithAggregatesFilter<"FeeMaster"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"FeeMaster"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FeeMaster"> | Date | string
   }
 
   export type SettlementHistoryWhereInput = {
@@ -5114,6 +5331,11 @@ export namespace Prisma {
     totalWeight?: IntFilter<"SettlementHistory"> | number
     fee?: IntFilter<"SettlementHistory"> | number
     memo?: StringNullableFilter<"SettlementHistory"> | string | null
+    isPbox?: BoolFilter<"SettlementHistory"> | boolean
+    isReturn?: BoolFilter<"SettlementHistory"> | boolean
+    so?: StringNullableFilter<"SettlementHistory"> | string | null
+    nap?: StringNullableFilter<"SettlementHistory"> | string | null
+    ton?: IntNullableFilter<"SettlementHistory"> | number | null
     createdAt?: DateTimeFilter<"SettlementHistory"> | Date | string
   }
 
@@ -5127,6 +5349,11 @@ export namespace Prisma {
     totalWeight?: SortOrder
     fee?: SortOrder
     memo?: SortOrderInput | SortOrder
+    isPbox?: SortOrder
+    isReturn?: SortOrder
+    so?: SortOrderInput | SortOrder
+    nap?: SortOrderInput | SortOrder
+    ton?: SortOrderInput | SortOrder
     createdAt?: SortOrder
   }
 
@@ -5143,6 +5370,11 @@ export namespace Prisma {
     totalWeight?: IntFilter<"SettlementHistory"> | number
     fee?: IntFilter<"SettlementHistory"> | number
     memo?: StringNullableFilter<"SettlementHistory"> | string | null
+    isPbox?: BoolFilter<"SettlementHistory"> | boolean
+    isReturn?: BoolFilter<"SettlementHistory"> | boolean
+    so?: StringNullableFilter<"SettlementHistory"> | string | null
+    nap?: StringNullableFilter<"SettlementHistory"> | string | null
+    ton?: IntNullableFilter<"SettlementHistory"> | number | null
     createdAt?: DateTimeFilter<"SettlementHistory"> | Date | string
   }, "id">
 
@@ -5156,6 +5388,11 @@ export namespace Prisma {
     totalWeight?: SortOrder
     fee?: SortOrder
     memo?: SortOrderInput | SortOrder
+    isPbox?: SortOrder
+    isReturn?: SortOrder
+    so?: SortOrderInput | SortOrder
+    nap?: SortOrderInput | SortOrder
+    ton?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: SettlementHistoryCountOrderByAggregateInput
     _avg?: SettlementHistoryAvgOrderByAggregateInput
@@ -5177,6 +5414,11 @@ export namespace Prisma {
     totalWeight?: IntWithAggregatesFilter<"SettlementHistory"> | number
     fee?: IntWithAggregatesFilter<"SettlementHistory"> | number
     memo?: StringNullableWithAggregatesFilter<"SettlementHistory"> | string | null
+    isPbox?: BoolWithAggregatesFilter<"SettlementHistory"> | boolean
+    isReturn?: BoolWithAggregatesFilter<"SettlementHistory"> | boolean
+    so?: StringNullableWithAggregatesFilter<"SettlementHistory"> | string | null
+    nap?: StringNullableWithAggregatesFilter<"SettlementHistory"> | string | null
+    ton?: IntNullableWithAggregatesFilter<"SettlementHistory"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"SettlementHistory"> | Date | string
   }
 
@@ -5227,121 +5469,177 @@ export namespace Prisma {
   export type DriverCreateInput = {
     name: string
     affiliation?: string | null
-    carNo?: string | null
     tonnage?: string | null
+    regDate?: string | null
+    address?: string | null
+    memo?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DriverUncheckedCreateInput = {
     id?: number
     name: string
     affiliation?: string | null
-    carNo?: string | null
     tonnage?: string | null
+    regDate?: string | null
+    address?: string | null
+    memo?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DriverUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     affiliation?: NullableStringFieldUpdateOperationsInput | string | null
-    carNo?: NullableStringFieldUpdateOperationsInput | string | null
     tonnage?: NullableStringFieldUpdateOperationsInput | string | null
+    regDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DriverUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     affiliation?: NullableStringFieldUpdateOperationsInput | string | null
-    carNo?: NullableStringFieldUpdateOperationsInput | string | null
     tonnage?: NullableStringFieldUpdateOperationsInput | string | null
+    regDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DriverCreateManyInput = {
     id?: number
     name: string
     affiliation?: string | null
-    carNo?: string | null
     tonnage?: string | null
+    regDate?: string | null
+    address?: string | null
+    memo?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DriverUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     affiliation?: NullableStringFieldUpdateOperationsInput | string | null
-    carNo?: NullableStringFieldUpdateOperationsInput | string | null
     tonnage?: NullableStringFieldUpdateOperationsInput | string | null
+    regDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DriverUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     affiliation?: NullableStringFieldUpdateOperationsInput | string | null
-    carNo?: NullableStringFieldUpdateOperationsInput | string | null
     tonnage?: NullableStringFieldUpdateOperationsInput | string | null
+    regDate?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeeMasterCreateInput = {
     affiliation: string
     tonnage: string
+    year: number
+    region: string
     fee: number
+    memo?: string | null
     isActive?: boolean
+    readonly?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FeeMasterUncheckedCreateInput = {
     id?: number
     affiliation: string
     tonnage: string
+    year: number
+    region: string
     fee: number
+    memo?: string | null
     isActive?: boolean
+    readonly?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FeeMasterUpdateInput = {
     affiliation?: StringFieldUpdateOperationsInput | string
     tonnage?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    region?: StringFieldUpdateOperationsInput | string
     fee?: IntFieldUpdateOperationsInput | number
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    readonly?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeeMasterUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     affiliation?: StringFieldUpdateOperationsInput | string
     tonnage?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    region?: StringFieldUpdateOperationsInput | string
     fee?: IntFieldUpdateOperationsInput | number
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    readonly?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeeMasterCreateManyInput = {
     id?: number
     affiliation: string
     tonnage: string
+    year: number
+    region: string
     fee: number
+    memo?: string | null
     isActive?: boolean
+    readonly?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FeeMasterUpdateManyMutationInput = {
     affiliation?: StringFieldUpdateOperationsInput | string
     tonnage?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    region?: StringFieldUpdateOperationsInput | string
     fee?: IntFieldUpdateOperationsInput | number
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    readonly?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeeMasterUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     affiliation?: StringFieldUpdateOperationsInput | string
     tonnage?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    region?: StringFieldUpdateOperationsInput | string
     fee?: IntFieldUpdateOperationsInput | number
+    memo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    readonly?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SettlementHistoryCreateInput = {
@@ -5353,6 +5651,11 @@ export namespace Prisma {
     totalWeight: number
     fee: number
     memo?: string | null
+    isPbox?: boolean
+    isReturn?: boolean
+    so?: string | null
+    nap?: string | null
+    ton?: number | null
     createdAt?: Date | string
   }
 
@@ -5366,6 +5669,11 @@ export namespace Prisma {
     totalWeight: number
     fee: number
     memo?: string | null
+    isPbox?: boolean
+    isReturn?: boolean
+    so?: string | null
+    nap?: string | null
+    ton?: number | null
     createdAt?: Date | string
   }
 
@@ -5378,6 +5686,11 @@ export namespace Prisma {
     totalWeight?: IntFieldUpdateOperationsInput | number
     fee?: IntFieldUpdateOperationsInput | number
     memo?: NullableStringFieldUpdateOperationsInput | string | null
+    isPbox?: BoolFieldUpdateOperationsInput | boolean
+    isReturn?: BoolFieldUpdateOperationsInput | boolean
+    so?: NullableStringFieldUpdateOperationsInput | string | null
+    nap?: NullableStringFieldUpdateOperationsInput | string | null
+    ton?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5391,6 +5704,11 @@ export namespace Prisma {
     totalWeight?: IntFieldUpdateOperationsInput | number
     fee?: IntFieldUpdateOperationsInput | number
     memo?: NullableStringFieldUpdateOperationsInput | string | null
+    isPbox?: BoolFieldUpdateOperationsInput | boolean
+    isReturn?: BoolFieldUpdateOperationsInput | boolean
+    so?: NullableStringFieldUpdateOperationsInput | string | null
+    nap?: NullableStringFieldUpdateOperationsInput | string | null
+    ton?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5404,6 +5722,11 @@ export namespace Prisma {
     totalWeight: number
     fee: number
     memo?: string | null
+    isPbox?: boolean
+    isReturn?: boolean
+    so?: string | null
+    nap?: string | null
+    ton?: number | null
     createdAt?: Date | string
   }
 
@@ -5416,6 +5739,11 @@ export namespace Prisma {
     totalWeight?: IntFieldUpdateOperationsInput | number
     fee?: IntFieldUpdateOperationsInput | number
     memo?: NullableStringFieldUpdateOperationsInput | string | null
+    isPbox?: BoolFieldUpdateOperationsInput | boolean
+    isReturn?: BoolFieldUpdateOperationsInput | boolean
+    so?: NullableStringFieldUpdateOperationsInput | string | null
+    nap?: NullableStringFieldUpdateOperationsInput | string | null
+    ton?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5429,6 +5757,11 @@ export namespace Prisma {
     totalWeight?: IntFieldUpdateOperationsInput | number
     fee?: IntFieldUpdateOperationsInput | number
     memo?: NullableStringFieldUpdateOperationsInput | string | null
+    isPbox?: BoolFieldUpdateOperationsInput | boolean
+    isReturn?: BoolFieldUpdateOperationsInput | boolean
+    so?: NullableStringFieldUpdateOperationsInput | string | null
+    nap?: NullableStringFieldUpdateOperationsInput | string | null
+    ton?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5532,9 +5865,12 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     affiliation?: SortOrder
-    carNo?: SortOrder
     tonnage?: SortOrder
+    regDate?: SortOrder
+    address?: SortOrder
+    memo?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DriverAvgOrderByAggregateInput = {
@@ -5545,18 +5881,24 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     affiliation?: SortOrder
-    carNo?: SortOrder
     tonnage?: SortOrder
+    regDate?: SortOrder
+    address?: SortOrder
+    memo?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DriverMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     affiliation?: SortOrder
-    carNo?: SortOrder
     tonnage?: SortOrder
+    regDate?: SortOrder
+    address?: SortOrder
+    memo?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DriverSumOrderByAggregateInput = {
@@ -5638,13 +5980,19 @@ export namespace Prisma {
     id?: SortOrder
     affiliation?: SortOrder
     tonnage?: SortOrder
+    year?: SortOrder
+    region?: SortOrder
     fee?: SortOrder
+    memo?: SortOrder
     isActive?: SortOrder
+    readonly?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type FeeMasterAvgOrderByAggregateInput = {
     id?: SortOrder
+    year?: SortOrder
     fee?: SortOrder
   }
 
@@ -5652,22 +6000,33 @@ export namespace Prisma {
     id?: SortOrder
     affiliation?: SortOrder
     tonnage?: SortOrder
+    year?: SortOrder
+    region?: SortOrder
     fee?: SortOrder
+    memo?: SortOrder
     isActive?: SortOrder
+    readonly?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type FeeMasterMinOrderByAggregateInput = {
     id?: SortOrder
     affiliation?: SortOrder
     tonnage?: SortOrder
+    year?: SortOrder
+    region?: SortOrder
     fee?: SortOrder
+    memo?: SortOrder
     isActive?: SortOrder
+    readonly?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type FeeMasterSumOrderByAggregateInput = {
     id?: SortOrder
+    year?: SortOrder
     fee?: SortOrder
   }
 
@@ -5677,6 +6036,17 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type SettlementHistoryCountOrderByAggregateInput = {
@@ -5689,6 +6059,11 @@ export namespace Prisma {
     totalWeight?: SortOrder
     fee?: SortOrder
     memo?: SortOrder
+    isPbox?: SortOrder
+    isReturn?: SortOrder
+    so?: SortOrder
+    nap?: SortOrder
+    ton?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -5697,6 +6072,7 @@ export namespace Prisma {
     destCount?: SortOrder
     totalWeight?: SortOrder
     fee?: SortOrder
+    ton?: SortOrder
   }
 
   export type SettlementHistoryMaxOrderByAggregateInput = {
@@ -5709,6 +6085,11 @@ export namespace Prisma {
     totalWeight?: SortOrder
     fee?: SortOrder
     memo?: SortOrder
+    isPbox?: SortOrder
+    isReturn?: SortOrder
+    so?: SortOrder
+    nap?: SortOrder
+    ton?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -5722,6 +6103,11 @@ export namespace Prisma {
     totalWeight?: SortOrder
     fee?: SortOrder
     memo?: SortOrder
+    isPbox?: SortOrder
+    isReturn?: SortOrder
+    so?: SortOrder
+    nap?: SortOrder
+    ton?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -5730,6 +6116,23 @@ export namespace Prisma {
     destCount?: SortOrder
     totalWeight?: SortOrder
     fee?: SortOrder
+    ton?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type AffiliationCountOrderByAggregateInput = {
@@ -5780,6 +6183,14 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5929,6 +6340,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
 

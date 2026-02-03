@@ -126,18 +126,26 @@ exports.Prisma.DriverScalarFieldEnum = {
   id: 'id',
   name: 'name',
   affiliation: 'affiliation',
-  carNo: 'carNo',
   tonnage: 'tonnage',
-  createdAt: 'createdAt'
+  regDate: 'regDate',
+  address: 'address',
+  memo: 'memo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.FeeMasterScalarFieldEnum = {
   id: 'id',
   affiliation: 'affiliation',
   tonnage: 'tonnage',
+  year: 'year',
+  region: 'region',
   fee: 'fee',
+  memo: 'memo',
   isActive: 'isActive',
-  createdAt: 'createdAt'
+  readonly: 'readonly',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SettlementHistoryScalarFieldEnum = {
@@ -150,6 +158,11 @@ exports.Prisma.SettlementHistoryScalarFieldEnum = {
   totalWeight: 'totalWeight',
   fee: 'fee',
   memo: 'memo',
+  isPbox: 'isPbox',
+  isReturn: 'isReturn',
+  so: 'so',
+  nap: 'nap',
+  ton: 'ton',
   createdAt: 'createdAt'
 };
 

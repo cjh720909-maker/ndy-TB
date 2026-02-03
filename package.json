@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node api/index.js",
     "dev": "nodemon api/index.js",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate --schema=prisma/schema.prisma && prisma generate --schema=prisma/neon.prisma",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
