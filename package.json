@@ -1,0 +1,27 @@
+{
+  "name": "ndy-dispatch-summary",
+  "version": "1.0.0",
+  "description": "NDY Dispatch & Picking Summary Dashboard",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js",
+    "postinstall": "prisma generate",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "iconv-lite": "^0.7.2",
+    "prisma": "^5.22.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

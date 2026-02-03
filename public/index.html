@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>용차 관리 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-item {
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background-color: #4338ca;
+            color: white;
+        }
+
+        .view-content:not(.active) {
+            display: none !important;
+        }
+
+        /* 2단 요약 정보를 가로로 강제 배치 */
+        .summary-row.active {
+            display: flex !important;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        /* Sticky Table Header Fix */
+        thead.sticky th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f1f5f9;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        /* Sidebar Toggle State */
+        #sidebar {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 16rem;
+            /* w-64 기본값 명시 */
+        }
+
+        #sidebar.collapsed {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+            pointer-events: none;
+        }
+
+        #sidebar.collapsed * {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="w-64 bg-indigo-900 text-indigo-100 flex-shrink-0 hidden md:flex flex-col shadow-2xl relative z-20 overflow-hidden">
+        <div
+            class="h-16 flex items-center justify-between px-6 font-bold text-xl tracking-wider text-white bg-indigo-950">
+            <span>🚚 NDY</span>
+            <button onclick="toggleSidebar()" class="text-indigo-300 hover:text-white transition-colors text-sm"
+                title="사이드바 접기">
+                <i class="fas fa-angle-double-left"></i>
+            </button>
+        </div>
+        <div class="p-4 space-y-2 flex-grow">
+            <div onclick="switchView('dispatch')" id="menu-dispatch"
+                class="sidebar-item w-full flex items-center px-4 py-3 rounded-xl font-medium text-left">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                </svg>
+                용차 리포트
+            </div>
+            <div onclick="switchView('picking')" id="menu-picking"
+                class="sidebar-item w-full flex items-center px-4 py-3 rounded-xl font-medium text-left">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17V7m0 10c-1.11 0-2.08-.407-2.67-1M12 17v1m6-12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
+                </svg>
+                용차 비용 정산
+            </div>
+            <div onclick="switchView('fees')" id="menu-fees"
+                class="sidebar-item w-full flex items-center px-4 py-3 rounded-xl font-medium text-left">
+                <i class="fas fa-file-invoice-dollar w-5 mr-3 text-center"></i>
+                용차단가조회
+            </div>
+            <div onclick="switchView('fee-entry')" id="menu-fee-entry"
+                class="sidebar-item w-full flex items-center px-4 py-3 rounded-xl font-medium text-left">
+                <i class="fas fa-edit w-5 mr-3 text-center"></i>
+                용차단가입력
+            </div>
+            <div onclick="switchView('drivers')" id="menu-drivers"
+                class="sidebar-item w-full flex items-center px-4 py-3 rounded-xl font-medium text-left">
+                <i class="fas fa-id-card w-5 mr-3 text-center"></i>
+                용차등록
+            </div>
+
+            <div class="px-4 py-2 mt-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Automation</div>
+            <div onclick="switchView('batch-settle')" id="menu-batch-settle"
+                class="sidebar-item w-full flex items-center px-4 py-3 rounded-xl font-medium text-left border border-indigo-500/30 bg-indigo-800/20">
+                <i class="fas fa-magic w-5 mr-3 text-center text-amber-400"></i>
+                자동 정산(Beta)
+            </div>
+        </div>
+        <div class="p-4 text-xs text-indigo-400 text-center">
+            © 2026 NDY System
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+
+        <!-- Header -->
+        <header class="h-16 bg-white shadow-sm flex items-center px-4 md:px-6 z-10 justify-between flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button id="header-sidebar-toggle" onclick="toggleSidebar()"
+                    class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 transition-colors hidden">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div class="font-bold text-lg text-slate-700" id="page-title">리포트 조회</div>
+            </div>
+            <div class="text-xs text-slate-400" id="currentDate"></div>
+        </header>
+
+        <!-- Common Master Header (Fixed Top) -->
+        <div class="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
+            <div class="max-w-7xl mx-auto divide-y divide-slate-100">
+                <div id="filter-area" class="px-4 py-1 bg-slate-50 flex items-center justify-between gap-3 text-[10px]">
+                    <div class="flex items-center gap-3 flex-grow overflow-x-auto no-scrollbar">
+                        <div id="date-filter-box" class="flex items-center gap-1 flex-shrink-0">
+                            <span class="font-bold text-slate-400">기간</span>
+                            <input type="date" id="startDate" class="px-1.5 py-0.5 border rounded bg-white">
+                            <span class="text-slate-300">-</span>
+                            <input type="date" id="endDate" class="px-1.5 py-0.5 border rounded bg-white">
+                            <div class="flex gap-1 ml-1">
+                                <button onclick="setCurrentMonth()"
+                                    class="px-2 py-0.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded text-[9px] font-bold transition-colors">당월</button>
+                                <button onclick="setLastMonth()"
+                                    class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[9px] font-bold transition-colors">전월</button>
+                            </div>
+                        </div>
+                        <div id="driver-filter-group" class="flex items-center gap-1 flex-shrink-0">
+                            <span class="font-bold text-slate-400">기사</span>
+                            <input type="text" id="driverInput" placeholder="기사명"
+                                class="w-24 px-1.5 py-0.5 border rounded bg-white outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <button id="btn-fetch-data" onclick="fetchData()"
+                            class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 shadow-sm transition-all ml-2">조회</button>
+                    </div>
+
+                    <!-- Batch Operations (Hidden by default, shown in batch-settle view) -->
+                    <div id="batch-actions" class="hidden items-center gap-3 border-l border-slate-200 pl-4 ml-2">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" id="batch-select-all" onchange="toggleAllBatchRows(this.checked)"
+                                checked
+                                class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all">
+                            <span
+                                class="text-[11px] font-bold text-slate-500 group-hover:text-slate-700 transition-colors">전체선택</span>
+                        </label>
+                        <button onclick="sendBatchToHistory()"
+                            class="px-5 py-1.5 bg-emerald-500 text-white rounded-lg font-bold text-xs hover:bg-emerald-600 shadow-sm transition-all flex items-center gap-1.5">
+                            <i class="fas fa-paper-plane text-[10px]"></i>선택 내역 전송
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Chips Area -->
+                <div class="px-4 py-1.5 bg-white">
+                    <div id="dispatch-summaryCards" class="view-content active summary-row active"></div>
+                    <div id="picking-summaryCards" class="view-content summary-row"></div>
+                    <div id="drivers-summaryCards" class="view-content summary-row"></div>
+                </div>
+
+                <!-- Consolidated Table Headers -->
+                <div class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-t">
+                    <!-- Dispatch Header -->
+                    <div id="dispatch-header" class="view-content active flex px-6 py-1">
+                        <div class="w-[40px] flex-shrink-0">No.</div>
+                        <div class="w-[90px] flex-shrink-0">날짜</div>
+                        <div class="w-[100px] flex-shrink-0">기사명</div>
+                        <div class="w-[90px] flex-shrink-0">소속</div>
+                        <div class="w-[60px] flex-shrink-0 text-right">납품처</div>
+                        <div class="w-[80px] flex-shrink-0 text-right">중량</div>
+                        <div class="w-[180px] flex-shrink-0 px-4">납품처상세</div>
+                        <div class="w-[50px] flex-shrink-0 text-center">P박스</div>
+                        <div class="w-[70px] flex-shrink-0 text-center">회송</div>
+                        <div class="w-[90px] flex-shrink-0 text-right px-2">정산금액</div>
+                        <div class="w-[90px] flex-shrink-0 text-right px-2">청구금액</div>
+                        <div class="flex-grow px-2">비고</div>
+                        <div class="w-[50px] flex-shrink-0 text-center">전송</div>
+                    </div>
+                    <!-- Picking Header -->
+                    <div id="picking-header"
+                        class="view-content flex px-6 py-1 text-[10px] font-bold bg-slate-100 border-b">
+                        <div class="w-[40px] flex-shrink-0 text-center">No.</div>
+                        <div class="w-[90px] flex-shrink-0">날짜</div>
+                        <div class="w-[100px] flex-shrink-0">기사명</div>
+                        <div class="w-[100px] flex-shrink-0">소속</div>
+                        <div class="w-[130px] flex-shrink-0">납품처</div>
+                        <div class="w-[70px] flex-shrink-0 text-center">중량</div>
+                        <div class="w-[90px] flex-shrink-0 text-right px-2">정산금액</div>
+                        <div class="w-[90px] flex-shrink-0 text-right px-2">청구금액</div>
+                        <div class="flex-grow px-4">비고</div>
+                        <div class="w-[100px] flex-shrink-0 text-center">관리</div>
+                    </div>
+                    <!-- Batch Settle Header -->
+                    <div id="batch-settle-header" class="view-content flex px-6 py-1 text-[10px]">
+                        <div class="w-[30px] flex-shrink-0 text-center">No.</div>
+                        <div class="w-[70px] flex-shrink-0">날짜</div>
+                        <div class="w-[70px] flex-shrink-0">기사명</div>
+                        <div class="w-[80px] flex-shrink-0">소속</div>
+                        <div class="w-[60px] flex-shrink-0 text-right pr-2">중량(KG)</div>
+                        <div class="w-[315px] flex-shrink-0 px-4">주소/납품처 (요약)</div>
+                        <div class="w-[60px] flex-shrink-0 text-center">총납품</div>
+                        <div class="w-[40px] flex-shrink-0 text-center">P박스</div>
+                        <div class="w-[40px] flex-shrink-0 text-center">회송</div>
+                        <div class="w-[40px] flex-shrink-0 text-center">권역</div>
+                        <div class="w-[70px] flex-shrink-0 text-center">차량선택</div>
+                        <div class="w-[70px] flex-shrink-0 text-right px-2">시작단가</div>
+                        <div class="w-[70px] flex-shrink-0 text-right px-2">추가금액</div>
+                        <div class="w-[70px] flex-shrink-0 text-right px-2">최종금액</div>
+                        <div class="flex-grow px-2 font-bold text-indigo-800">정산근거 / 비고 (확장)</div>
+                        <div class="w-[40px] flex-shrink-0 text-center">선택</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Scrollable Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar">
+            <div class="max-w-7xl mx-auto h-full">
+                <!-- Dispatch View -->
+                <div id="view-dispatch" class="view-content active h-full">
+                    <div class="bg-white border rounded shadow-sm overflow-hidden">
+                        <table class="w-full text-[11px] text-left table-fixed">
+                            <tbody id="dispatch-tableBody" class="divide-y text-slate-600"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Picking View (정산이력) -->
+                <div id="view-picking" class="view-content h-full flex flex-col">
+                    <div
+                        class="flex-1 bg-white border rounded shadow-sm overflow-hidden overflow-y-auto max-h-[calc(100vh-280px)]">
+                        <table class="w-full text-[11px] text-left table-fixed border-collapse">
+                            <tbody id="picking-tableBody" class="divide-y text-slate-600"></tbody>
+                        </table>
+                    </div>
+                    <!-- 하단 합계 요약 바 -->
+                    <div id="picking-footer-summary"
+                        class="mt-2 bg-slate-800 text-white rounded-lg p-3 flex items-center justify-around shadow-lg border border-slate-700">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">조회 건수</span>
+                            <span id="hist-total-count" class="text-sm font-bold">0건</span>
+                        </div>
+                        <div class="w-px h-6 bg-slate-600"></div>
+                        <div class="flex items-center gap-2 text-blue-400">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">정산 합계</span>
+                            <span id="hist-total-kum" class="text-lg font-black tracking-tight">0원</span>
+                        </div>
+                        <div class="w-px h-6 bg-slate-600"></div>
+                        <div class="flex items-center gap-2 text-indigo-400">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">청구 합계</span>
+                            <span id="hist-total-un" class="text-lg font-black tracking-tight">0원</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Batch Settle View -->
+                <div id="view-batch-settle" class="view-content h-full">
+                    <div class="bg-white border rounded shadow-sm overflow-hidden">
+                        <table class="w-full text-[11px] text-left table-fixed">
+                            <tbody id="batch-settle-tableBody" class="divide-y text-slate-600"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Fees View Container (매트릭스 리포트) -->
+                <div id="view-fees" class="view-content">
+                    <!-- [슬림화] 통합 컨트롤 바 -->
+                    <div
+                        class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 mb-4 flex items-center justify-between gap-4">
+                        <!-- 왼쪽: 조회 및 검색 -->
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">적용연도</span>
+                                <select id="report-fee-year" onchange="fetchFeeMaster()"
+                                    class="px-2 py-1 border border-slate-200 rounded text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 font-bold text-indigo-700 cursor-pointer">
+                                    <option value="2025">2025년</option>
+                                    <option value="2026" selected>2026년</option>
+                                    <option value="2027">2027년</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-1.5 ml-2">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">업체검색</span>
+                                <input type="text" id="report-fee-affiliation" placeholder="업체명 입력..."
+                                    onkeyup="if(event.key==='Enter') fetchFeeMaster()"
+                                    class="px-3 py-1 border border-slate-200 rounded text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none w-40 bg-slate-50 focus:bg-white transition-all">
+                                <button onclick="fetchFeeMaster()"
+                                    class="px-3 py-1 bg-slate-800 text-white rounded font-bold text-xs hover:bg-slate-900 transition-colors">조회</button>
+                            </div>
+                        </div>
+
+                        <!-- 오른쪽: 엑셀 일괄 작업 -->
+                        <div class="flex items-center gap-2 border-l border-slate-200 pl-4">
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase mr-1"><i
+                                    class="fas fa-file-excel mr-1"></i>매트릭스 일괄등록</span>
+                            <button onclick="downloadFeeTemplate()"
+                                class="px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded font-bold text-[10px] hover:bg-slate-100 transition-colors">
+                                <i class="fas fa-download mr-1"></i> 양식
+                            </button>
+                            <label for="fee-excel-upload"
+                                class="px-3 py-1 bg-indigo-600 text-white rounded font-bold text-[10px] hover:bg-indigo-700 cursor-pointer shadow-sm flex items-center transition-all">
+                                <i class="fas fa-upload mr-1"></i> 엑셀 업로드
+                            </label>
+                            <input type="file" id="fee-excel-upload" class="hidden" accept=".xlsx, .xls"
+                                onchange="handleFeeExcel(event)">
+                        </div>
+                    </div>
+
+                    <div id="fee-bulk-preview" class="hidden mb-4 p-4 border rounded shadow-sm bg-emerald-50/30">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-emerald-700">업로드 대기 데이터 (<span
+                                    id="preview-count">0</span>건)</span>
+                            <div class="flex gap-2">
+                                <button onclick="cancelBulkUpload()"
+                                    class="text-xs text-slate-500 font-bold">취소</button>
+                                <button onclick="submitBulkFees()"
+                                    class="px-4 py-1 text-xs bg-emerald-600 text-white rounded font-bold">일괄 저장
+                                    확정</button>
+                            </div>
+                        </div>
+                        <div class="max-h-60 overflow-y-auto border border-emerald-100 rounded bg-white">
+                            <table class="w-full text-[10px] text-left">
+                                <thead class="bg-emerald-50 text-emerald-700 sticky top-0">
+                                    <tr>
+                                        <th class="px-3 py-1.5 text-center">연도</th>
+                                        <th class="px-3 py-1.5">업체명</th>
+                                        <th class="px-3 py-1.5">지역명</th>
+                                        <th class="px-3 py-1.5 text-right pr-5">정산단가</th>
+                                        <th class="px-4 py-1.5">비고</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="preview-body" class="divide-y divide-emerald-50"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border rounded shadow-sm overflow-hidden flex flex-col">
+                        <!-- 가로 스크롤을 위한 컨테이너 (매트릭스 전용) - 높이 확장 -->
+                        <div
+                            class="overflow-x-auto overflow-y-auto no-scrollbar max-h-[calc(100vh-200px)] border rounded shadow-inner bg-slate-50/50">
+                            <table class="min-w-full text-[11px] border-collapse relative">
+                                <thead class="sticky top-0 z-[70] bg-slate-900 shadow-md" id="fees-matrix-header">
+                                    <!-- JS에서 동적으로 매트릭스 헤더 생성 -->
+                                </thead>
+                                <tbody id="fees-matrix-body" class="divide-y divide-slate-200 text-slate-600 bg-white">
+                                    <tr>
+                                        <td class="p-12 text-center text-slate-400 italic">단가를 로드 중입니다...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fee Entry View Container -->
+                <div id="view-fee-entry" class="view-content">
+                    <!-- 1. 조회 필터바 (단가입력용) -->
+                    <div class="bg-white border rounded shadow-sm mb-3 px-4 py-1.5 flex items-center gap-3">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] font-bold text-slate-400">연도</span>
+                            <select id="entry-filter-year"
+                                class="px-1.5 py-0.5 border border-slate-200 rounded text-[10px]">
+                                <option value="2024">2024년</option>
+                                <option value="2025">2025년</option>
+                                <option value="2026" selected>2026년</option>
+                                <option value="2027">2027년</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] font-bold text-slate-400">소속사</span>
+                            <input type="text" id="entry-filter-affiliation" placeholder="업체명"
+                                class="px-1.5 py-0.5 border border-slate-200 rounded text-[10px] w-24">
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] font-bold text-slate-400">지역</span>
+                            <input type="text" id="entry-filter-region" placeholder="지역검색"
+                                class="px-1.5 py-0.5 border border-slate-200 rounded text-[10px] w-24">
+                        </div>
+                        <button onclick="fetchFeeEntry()"
+                            class="px-3 py-1 bg-slate-700 text-white rounded font-bold text-[10px] hover:bg-slate-800 transition-colors">단가
+                            조회</button>
+
+                        <div class="flex-grow"></div>
+
+                        <button onclick="saveBulkFeeChanges()" id="btn-bulk-save"
+                            class="px-4 py-1.5 bg-indigo-600 text-white rounded font-bold text-[11px] hover:bg-indigo-700 shadow-md transition-all hidden">수정사항
+                            일괄저장</button>
+                    </div>
+
+                    <!-- 2. 개별 입력/수정 폼 (콤팩트 모드) -->
+                    <div class="bg-indigo-50/50 border border-indigo-100 rounded shadow-sm overflow-hidden p-3 mb-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-[11px] font-bold text-indigo-700 flex items-center gap-1">
+                                <i class="fas fa-edit"></i> 신규 등록 및 개별 수정
+                                <span id="fee-edit-indicator"
+                                    class="hidden ml-2 bg-amber-500 text-white px-1.5 py-0.5 rounded text-[9px]">수정
+                                    중</span>
+                            </h3>
+                            <button onclick="resetFeeForm()"
+                                class="text-[10px] text-slate-400 hover:text-slate-600 font-bold">초기화</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-9 gap-2">
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-0.5">소속사</label>
+                                <input type="text" id="fee-affiliation"
+                                    class="w-full px-1.5 py-1 border rounded text-[10px]" placeholder="업체명">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-0.5">연도</label>
+                                <select id="fee-year" class="w-full px-1.5 py-1 border rounded text-[10px]">
+                                    <option value="2024">2024년</option>
+                                    <option value="2025">2025년</option>
+                                    <option value="2026" selected>2026년</option>
+                                    <option value="2027">2027년</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-0.5">지역</label>
+                                <input type="text" id="fee-region" class="w-full px-1.5 py-1 border rounded text-[10px]"
+                                    placeholder="지역명">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[9px] font-bold text-slate-400 mb-0.5 text-indigo-500">정산단가</label>
+                                <input type="number" id="fee-price" step="1000"
+                                    class="w-full px-1.5 py-1 border border-indigo-200 rounded text-[11px] font-bold text-indigo-600 focus:ring-1 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-[9px] font-bold text-slate-400 mb-0.5">적용일자</label>
+                                <input type="date" id="fee-regDate"
+                                    class="w-full px-1.5 py-1 border rounded text-[10px]">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-[9px] font-bold text-slate-400 mb-0.5">수정사유</label>
+                                <input type="text" id="fee-reason" class="w-full px-1.5 py-1 border rounded text-[10px]"
+                                    placeholder="사유">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-[9px] font-bold text-slate-400 mb-0.5">비고</label>
+                                <input type="text" id="fee-memo" class="w-full px-1.5 py-1 border rounded text-[10px]"
+                                    placeholder="메모">
+                            </div>
+                            <div class="flex items-end gap-1">
+                                <button onclick="saveFeeMaster()" id="btn-fee-save"
+                                    class="flex-grow py-1 bg-indigo-600 text-white rounded font-bold text-[11px] hover:bg-indigo-700 shadow-sm transition-colors">단가
+                                    저장</button>
+                                <button id="btn-fee-archive"
+                                    class="hidden px-2 py-1 bg-slate-500 text-white rounded font-bold text-[10px] hover:bg-slate-600 shadow-sm transition-colors whitespace-nowrap">이력전환</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 원래의 리스트형 편집 그리드 복구 -->
+                    <div class="bg-white border rounded shadow-sm overflow-hidden">
+                        <div
+                            class="bg-slate-800 text-white flex px-6 py-1.5 font-bold text-[10px] uppercase tracking-wider">
+                            <div class="w-[40px] shrink-0 text-center">No.</div>
+                            <div class="w-[60px] shrink-0 text-center">연도</div>
+                            <div class="w-[120px] shrink-0">소속사</div>
+                            <div class="w-[150px] shrink-0">지역</div>
+                            <div class="w-[120px] shrink-0 text-right px-4">정산단가</div>
+                            <div class="flex-grow px-4">비고 (수정 사유 등)</div>
+                            <div class="w-[60px] shrink-0 text-center">관리</div>
+                        </div>
+                        <div class="max-h-[calc(100vh-320px)] overflow-y-auto no-scrollbar">
+                            <table class="w-full text-left text-[10px] table-fixed">
+                                <tbody id="fee-entry-tableBody" class="divide-y text-slate-600">
+                                    <tr>
+                                        <td colspan="7" class="p-12 text-center text-slate-400 italic">단가를 조회해 주세요. 🧐
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drivers View Container -->
+                <div id="view-drivers" class="view-content">
+                    <div class="bg-white border rounded shadow-sm overflow-hidden mb-3 bg-slate-50/30 p-2">
+                        <div class="flex items-center gap-2 flex-wrap md:flex-nowrap">
+                            <div class="flex items-center gap-1 flex-shrink-0 mr-1">
+                                <span class="text-[10px] font-bold text-slate-500 whitespace-nowrap">기사등록</span>
+                                <span id="driver-total-header"
+                                    class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-bold"></span>
+                                <span id="driver-edit-indicator"
+                                    class="hidden w-2 h-2 bg-amber-500 rounded-full animate-pulse" title="수정 중"></span>
+                            </div>
+                            <input type="text" id="driver-name"
+                                class="w-16 md:w-20 px-1.5 py-1 border rounded text-[10px]" placeholder="기사명">
+                            <input type="text" id="driver-affiliation"
+                                class="w-20 md:w-24 px-1.5 py-1 border rounded text-[10px]" placeholder="소속">
+                            <select id="driver-tonnage" class="w-14 md:w-16 px-1.5 py-1 border rounded text-[10px]">
+                                <option value="3.5T">3.5T</option>
+                                <option value="2.5T">2.5T</option>
+                                <option value="1T">1T</option>
+                                <option value="기타">기타</option>
+                            </select>
+                            <input type="date" id="driver-regDate"
+                                class="w-24 md:w-28 px-1.5 py-1 border rounded text-[10px]">
+                            <input type="text" id="driver-address"
+                                class="w-24 md:w-32 px-1.5 py-1 border rounded text-[10px]" placeholder="지역(거주지)">
+                            <input type="text" id="driver-memo"
+                                class="flex-grow min-w-[80px] px-1.5 py-1 border rounded text-[10px]" placeholder="비고">
+                            <div class="flex gap-1 flex-shrink-0 ml-auto">
+                                <button onclick="resetDriverForm()"
+                                    class="px-2 py-1 bg-slate-200 text-slate-600 rounded font-bold text-[9px] hover:bg-slate-300">초기화</button>
+                                <button onclick="saveDriverMaster()" id="btn-driver-save"
+                                    class="px-3 py-1 bg-indigo-600 text-white rounded font-bold text-[9px] hover:bg-indigo-700 shadow-sm transition-colors">저장</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="drivers-header-box"
+                        class="bg-indigo-900 text-white flex px-6 py-1 rounded-t-lg font-bold text-[10px] uppercase">
+                        <div class="w-[40px] flex-shrink-0 text-center">No.</div>
+                        <div class="w-[100px] flex-shrink-0">기사명</div>
+                        <div class="w-[100px] flex-shrink-0">소속</div>
+                        <div class="w-[80px] flex-shrink-0 text-center">톤수</div>
+                        <div class="w-[100px] flex-shrink-0 text-center">등록일</div>
+                        <div class="w-[180px] flex-shrink-0">지역</div>
+                        <div class="flex-grow px-4">비고</div>
+                        <div class="w-[80px] flex-shrink-0 text-center">관리</div>
+                    </div>
+                    <div class="bg-white border border-t-0 rounded-b-lg shadow-sm">
+                        <table class="w-full text-left text-[10px] table-fixed">
+                            <tbody id="drivers-tableBody" class="divide-y text-slate-600"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/common.js"></script>
+    <script src="/dispatch.js"></script>
+    <script src="/fees.js"></script>
+    <script src="/drivers.js"></script>
+    <script src="/history.js"></script>
+    <script src="/batch_settle.js"></script>
+    <script>
+        let currentView = 'dispatch';
+
+        // Sidebar Toggle Logic
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const headerBtn = document.getElementById('header-sidebar-toggle');
+
+            sidebar.classList.toggle('collapsed');
+
+            // 사이드바가 접혔을 때만 헤더의 햄버거 버튼을 보여줌
+            if (sidebar.classList.contains('collapsed')) {
+                headerBtn.classList.remove('hidden');
+            } else {
+                headerBtn.classList.add('hidden');
+            }
+
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        }
+
+        // View Switching Logic (Display Only - No State Reset)
+        function switchView(view) {
+            currentView = view;
+
+            // UI Update
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('menu-' + view).classList.add('active');
+
+            document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + view).classList.add('active');
+
+            const pageTitles = {
+                'dispatch': '용차 리포트',
+                'picking': '용차 비용 정산',
+                'batch-settle': '자동 정산(Batch)',
+                'fees': '용차단가조회',
+                'fee-entry': '용차단가입력',
+                'drivers': '용차등록'
+            };
+            document.getElementById('page-title').innerText = pageTitles[view] || '용차 관리 시스템';
+
+            // Filter Visibility Control
+            const driverFilter = document.getElementById('driver-filter-group');
+            const batchActions = document.getElementById('batch-actions');
+            const batchHeader = document.getElementById('batch-settle-header');
+
+            if (view === 'dispatch') {
+                document.getElementById('filter-area').style.display = 'flex';
+                document.getElementById('date-filter-box').style.display = 'flex';
+                if (driverFilter) driverFilter.style.display = 'flex';
+                if (batchActions) batchActions.classList.add('hidden');
+                document.getElementById('btn-fetch-data').style.display = 'block';
+
+                document.getElementById('dispatch-summaryCards').classList.add('active');
+                document.getElementById('picking-summaryCards').classList.remove('active');
+
+                document.getElementById('dispatch-header').classList.add('active');
+                document.getElementById('picking-header').classList.remove('active');
+                if (batchHeader) batchHeader.classList.remove('active');
+
+                if (typeof loadFeeMaster === 'function') loadFeeMaster();
+            } else if (view === 'batch-settle') {
+                document.getElementById('filter-area').style.display = 'flex';
+                document.getElementById('date-filter-box').style.display = 'flex';
+                if (driverFilter) driverFilter.style.display = 'flex';
+                if (batchActions) {
+                    batchActions.classList.remove('hidden');
+                    batchActions.classList.add('flex');
+                }
+                document.getElementById('btn-fetch-data').style.display = 'block';
+
+                document.getElementById('dispatch-summaryCards').classList.remove('active');
+                document.getElementById('picking-summaryCards').classList.remove('active');
+
+                document.getElementById('dispatch-header').classList.remove('active');
+                document.getElementById('picking-header').classList.remove('active');
+                if (batchHeader) batchHeader.classList.add('active');
+
+                if (typeof loadBatchSettleData === 'function') loadBatchSettleData();
+            } else if (view === 'picking') {
+                document.getElementById('filter-area').style.display = 'flex';
+                document.getElementById('date-filter-box').style.display = 'flex';
+                if (driverFilter) driverFilter.style.display = 'flex';
+                if (batchActions) batchActions.classList.add('hidden');
+                document.getElementById('btn-fetch-data').style.display = 'block';
+
+                document.getElementById('dispatch-summaryCards').classList.remove('active');
+                document.getElementById('picking-summaryCards').classList.add('active');
+
+                document.getElementById('dispatch-header').classList.remove('active');
+                document.getElementById('picking-header').classList.add('active');
+                if (batchHeader) batchHeader.classList.remove('active');
+            } else if (view === 'fees') {
+                document.getElementById('filter-area').style.display = 'none';
+                if (typeof fetchFeeMaster === 'function') fetchFeeMaster();
+            } else if (view === 'fee-entry') {
+                document.getElementById('filter-area').style.display = 'none';
+            } else if (view === 'drivers') {
+                document.getElementById('filter-area').style.display = 'none';
+                document.getElementById('dispatch-summaryCards').classList.remove('active');
+                document.getElementById('picking-summaryCards').classList.remove('active');
+                document.getElementById('drivers-summaryCards').classList.add('active');
+
+                document.getElementById('dispatch-header').classList.remove('active');
+                document.getElementById('picking-header').classList.remove('active');
+                if (batchHeader) batchHeader.classList.remove('active');
+
+                if (typeof fetchDriverMaster === 'function') fetchDriverMaster();
+            }
+            // URL Update
+            window.history.pushState({}, '', '/' + view);
+        }
+
+        // Global fetchData proxy
+        function fetchData() {
+            if (currentView === 'dispatch') fetchDispatchData();
+            else if (currentView === 'picking') fetchPickingData();
+            else if (currentView === 'batch-settle') loadBatchSettleData();
+        }
+
+        // Auto-detect view from URL
+        window.onload = () => {
+            // 사이드바 상태 복원
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const headerBtn = document.getElementById('header-sidebar-toggle');
+
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                headerBtn.classList.remove('hidden');
+            } else {
+                sidebar.classList.remove('collapsed');
+                headerBtn.classList.add('hidden');
+            }
+
+            const path = window.location.pathname;
+            if (path.includes('picking')) switchView('picking');
+            else if (path.includes('fee-entry')) switchView('fee-entry');
+            else if (path.includes('fees')) switchView('fees');
+            else if (path.includes('drivers')) switchView('drivers');
+            else switchView('dispatch');
+        };
+
+        // Enter key listener
+        document.getElementById('driverInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') fetchData();
+        });
+    </script>
+    <!-- 정산 내역 수정 모달 -->
+    <div id="history-edit-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-[500px] overflow-hidden">
+            <div class="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center">
+                <h3 class="font-bold">정산 내역 수정</h3>
+                <button onclick="closeHistoryEditModal()" class="text-white/80 hover:text-white"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <input type="hidden" id="edit-hist-idx">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">날짜</label>
+                        <input type="date" id="edit-hist-date" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">기사명</label>
+                        <input type="text" id="edit-hist-name"
+                            class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50" readonly>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">소속</label>
+                        <input type="text" id="edit-hist-so" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">납품처</label>
+                        <input type="text" id="edit-hist-nap" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">중량</label>
+                        <input type="number" id="edit-hist-ton" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">정산금액</label>
+                        <input type="number" id="edit-hist-kum"
+                            class="w-full px-3 py-2 border rounded-lg text-sm font-bold text-blue-600">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">청구금액</label>
+                        <input type="number" id="edit-hist-un"
+                            class="w-full px-3 py-2 border rounded-lg text-sm font-bold text-indigo-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 block mb-1">비고</label>
+                    <textarea id="edit-hist-memo" class="w-full px-3 py-2 border rounded-lg text-sm h-20"></textarea>
+                </div>
+            </div>
+            <div class="bg-slate-50 px-6 py-4 flex justify-end gap-2">
+                <button onclick="closeHistoryEditModal()" class="px-4 py-2 text-slate-500 font-bold text-sm">취소</button>
+                <button onclick="saveHistoryEdit()"
+                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700">변경사항
+                    저장</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+[
+  {
+    "idx": 1770001713969,
+    "name": "전채우",
+    "affiliation": "전채우",
+    "tonnage": "1T",
+    "regDate": "2026-01-01",
+    "address": "창원",
+    "memo": "개별용차",
+    "created_at": "2026-02-02T03:08:33.969Z",
+    "updated_at": "2026-02-02T03:33:02.009Z"
+  },
+  {
+    "idx": 1770001761731,
+    "name": "신동철",
+    "affiliation": "신동철",
+    "tonnage": "1T",
+    "regDate": "2026-01-01",
+    "address": "부산 초량동",
+    "memo": "개별용차",
+    "created_at": "2026-02-02T03:09:21.731Z",
+    "updated_at": "2026-02-02T03:33:07.025Z"
+  },
+  {
+    "idx": 1770003125204,
+    "name": "김기원",
+    "affiliation": "이룸",
+    "tonnage": "1T",
+    "regDate": "2026-01-01",
+    "address": "양산",
+    "memo": "운수업체",
+    "created_at": "2026-02-02T03:32:05.204Z",
+    "updated_at": "2026-02-02T03:33:39.328Z"
+  },
+  {
+    "idx": 1770003166078,
+    "name": "이룸1",
+    "affiliation": "이룸",
+    "tonnage": "기타",
+    "regDate": "2026-01-01",
+    "address": "양산",
+    "memo": "운수업체",
+    "created_at": "2026-02-02T03:32:46.078Z",
+    "updated_at": "2026-02-02T22:13:21.221Z"
+  },
+  {
+    "idx": 1770070297166,
+    "name": "이룸2",
+    "affiliation": "이룸",
+    "tonnage": "기타",
+    "regDate": "2026-01-01",
+    "address": "양산",
+    "memo": "운수업체",
+    "created_at": "2026-02-02T22:11:37.166Z",
+    "updated_at": "2026-02-02T22:13:29.418Z"
+  },
+  {
+    "idx": 1770070437470,
+    "name": "이룸3",
+    "affiliation": "이룸",
+    "tonnage": "기타",
+    "regDate": "2026-01-01",
+    "address": "양산",
+    "memo": "운수업체",
+    "created_at": "2026-02-02T22:13:57.470Z"
+  },
+  {
+    "idx": 1770070582365,
+    "name": "이룸4",
+    "affiliation": "이룸",
+    "tonnage": "기타",
+    "regDate": "2026-01-01",
+    "address": "양산",
+    "memo": "운수업체",
+    "created_at": "2026-02-02T22:16:22.365Z"
+  }
+]

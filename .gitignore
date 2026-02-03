@@ -1,0 +1,12 @@
+node_modules
+.env
+*.xlsx
+*.log
+*.txt
+.DS_Store
+dist
+build
+.vercel
+prisma/migrations
+.antigravityrules
+/home/redrira/.gemini/antigravity/brain/
